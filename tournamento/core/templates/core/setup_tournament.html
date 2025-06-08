@@ -1,0 +1,8 @@
+<h2>Setup Tournament: {{ tournament.name }}</h2>
+<p>Total Teams: {{ tournament.total_teams }}</p>
+<p>Groups: {{ tournament.total_groups }}</p>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Confirm Setup</button>
+</form>
