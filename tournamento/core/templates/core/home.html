@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,5 +6,34 @@
 <body>
     <h1>Welcome to Tournamento 🏆</h1>
     <p>Start managing your tournament here.</p>
+
+    <h2>Create a New Tournament</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label for="name">Tournament Name:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="total_teams">Total Teams:</label><br>
+        <input type="number" id="total_teams" name="total_teams" required><br><br>
+
+        <label for="total_groups">Total Groups:</label><br>
+        <input type="number" id="total_groups" name="total_groups" required><br><br>
+
+        <button type="submit">Create Tournament</button>
+    </form>
+
+    <hr>
+
+    <h2>Existing Tournaments</h2>
+    <ul>
+        {% for tournament in tournaments %}
+            <li>
+                {{ tournament.name }} – {{ tournament.total_teams }} teams, {{ tournament.total_groups }} groups
+                [<a href="{% url 'setup_tournament' tournament.id %}">Setup</a>]
+            </li>
+        {% empty %}
+            <li>No tournaments created yet.</li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
