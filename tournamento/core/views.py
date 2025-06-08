@@ -1,8 +1,16 @@
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Tournament
-from .utils import assign_groups_and_generate_fixtures
+from .forms import TournamentForm
+
+def home(request):
+    tournaments = Tournament.objects.all()
+    return render(request, 'tournaments/home.html', {'tournaments': tournaments})
 
 def setup_tournament(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
-    assign_groups_and_generate_fixtures(tournament)
-    return redirect('tournament_detail', tournament_id=tournament.id)
+
+    if request.method == 'POST':
+        # handle setup logic later (grouping, points system, etc.)
+        pass
+
+    return render(request, 'tournaments/setup.html', {'tournament': tournament})
