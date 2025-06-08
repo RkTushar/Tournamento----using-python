@@ -1,15 +1,18 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Tournament
 
 def home(request):
-    tournaments = Tournament.objects.all()
-    return render(request, 'core/home.html', {'tournaments': tournaments})
-
-def setup_tournament(request, tournament_id):
-    tournament = get_object_or_404(Tournament, id=tournament_id)
-
     if request.method == 'POST':
-        # You'll process group/team setup here later
-        return redirect('setup_tournament', tournament_id=tournament.id)
+        name = request.POST.get('name')
+        total_teams = int(request.POST.get('total_teams'))
+        total_groups = int(request.POST.get('total_groups'))
 
-    return render(request, 'core/setup_tournament.html', {'tournament': tournament})
+        Tournament.objects.create(
+            name=name,
+            total_teams=total_teams,
+            total_groups=total_groups
+        )
+        return redirect('home')
+
+    tournaments = Tournament.objects.all().order_by('-created_at')
+    return render(request, 'core/home.html', {'tournaments': tournaments})
