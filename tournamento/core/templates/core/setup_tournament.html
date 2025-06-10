@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Setup Tournament</title>
+    <title>Setup Tournament | {{ tournament.name }}</title>
 </head>
 <body>
     <h1>Setup Tournament: {{ tournament.name }}</h1>
+    <p>Total Teams: {{ tournament.total_teams }} | Groups: {{ tournament.total_groups }}</p>
 
-    <form method="post">
+    <form method="POST">
         {% csrf_token %}
-        <p>Total Teams: {{ tournament.total_teams }}</p>
-        <p>Total Groups: {{ tournament.total_groups }}</p>
-
-        {% for i in team_count %}
-            <label for="team_{{ i }}">Team {{ i|add:1 }} Name:</label>
-            <input type="text" name="team_names" id="team_{{ i }}" required><br><br>
-        {% endfor %}
-
-        <button type="submit">Submit & Generate Groups</button>
+        <h3>Enter Team Names</h3>
+        <ul>
+            {% for i in team_count %}
+                <li>
+                    <input type="text" name="team_names" placeholder="Team {{ forloop.counter }}" required>
+                </li>
+            {% endfor %}
+        </ul>
+        <button type="submit">Create Groups & Assign Teams</button>
     </form>
+
+    <p><a href="{% url 'home' %}">⬅ Back to Home</a></p>
 </body>
 </html>
