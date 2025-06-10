@@ -1,23 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Tournamento | Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        h1 {
+            color: #2E8B57;
+        }
+        form {
+            background: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ddd;
+            width: 300px;
+        }
+        input, button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 8px;
+        }
+        ul {
+            margin-top: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to Tournamento 🏆</h1>
-    <p>Start managing your tournament here.</p>
+    <h1>🏆 Welcome to Tournamento</h1>
+    <p>Manage your tournaments efficiently with our system.</p>
 
     <h2>Create a New Tournament</h2>
     <form method="post">
         {% csrf_token %}
-        <label for="name">Tournament Name:</label><br>
-        <input type="text" id="name" name="name" required><br><br>
+        <label for="name">Tournament Name:</label>
+        <input type="text" id="name" name="name" required>
 
-        <label for="total_teams">Total Teams:</label><br>
-        <input type="number" id="total_teams" name="total_teams" required><br><br>
+        <label for="total_teams">Total Teams:</label>
+        <input type="number" id="total_teams" name="total_teams" required>
 
-        <label for="total_groups">Total Groups:</label><br>
-        <input type="number" id="total_groups" name="total_groups" required><br><br>
+        <label for="total_groups">Total Groups:</label>
+        <input type="number" id="total_groups" name="total_groups" required>
 
         <button type="submit">Create Tournament</button>
     </form>
@@ -28,8 +59,11 @@
     <ul>
         {% for tournament in tournaments %}
             <li>
-                {{ tournament.name }} – {{ tournament.total_teams }} teams, {{ tournament.total_groups }} groups
-                [<a href="{% url 'setup_tournament' tournament.id %}">Setup</a>]
+                <strong>{{ tournament.name }}</strong> — 
+                {{ tournament.total_teams }} teams, {{ tournament.total_groups }} groups
+                [
+                    <a href="{% url 'setup_tournament' tournament.id %}">Setup</a>
+                ]
             </li>
         {% empty %}
             <li>No tournaments created yet.</li>
