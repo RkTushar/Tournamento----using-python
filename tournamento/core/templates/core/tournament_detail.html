@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ tournament.name }} | Tournament Details</title>
+</head>
+<body>
+    <h1>{{ tournament.name }} 🏆</h1>
+    <p>Total Teams: {{ tournament.total_teams }} | Groups: {{ tournament.total_groups }}</p>
+    <p><a href="{% url 'home' %}">⬅ Back to Home</a></p>
+
+    {% for group in groups %}
+        <hr>
+        <h2>{{ group.name }}</h2>
+
+        <h3>Teams</h3>
+        <ul>
+            {% for team in group.teams.all %}
+                <li>{{ team.name }}</li>
+            {% endfor %}
+        </ul>
+
+        <h3>Matches</h3>
+        <ul>
+            {% for match in group.matches.all %}
+                <li>{{ match.team_a.name }} vs {{ match.team_b.name }} – 
+                    {% if match.played %}
+                        {{ match.score_a }} : {{ match.score_b }}
+                    {% else %}
+                        Not Played Yet
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li>No matches generated.</li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+</body>
+</html>
