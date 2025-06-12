@@ -7,51 +7,54 @@
         body {
             font-family: Arial, sans-serif;
             margin: 40px;
+            background-color: #f5f8fa;
         }
         h1 {
-            color: #333;
+            color: #2E8B57;
         }
         form {
-            background: #f9f9f9;
+            background: #ffffff;
             padding: 20px;
-            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             width: 400px;
         }
-        input[type="text"] {
+        input, button {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
         }
         button {
-            background: #28a745;
+            background-color: #2E8B57;
             color: white;
-            padding: 10px;
-            border: none;
-            width: 100%;
+            font-weight: bold;
             cursor: pointer;
-            font-size: 16px;
         }
         button:hover {
-            background: #218838;
+            background-color: #276947;
+        }
+        ul {
+            padding-left: 0;
+            list-style-type: none;
+        }
+        li {
+            margin-bottom: 10px;
         }
         a {
-            display: inline-block;
-            margin-top: 20px;
-            color: #007bff;
             text-decoration: none;
+            color: #007BFF;
         }
         a:hover {
             text-decoration: underline;
         }
-        ul {
-            list-style: none;
-            padding-left: 0;
-        }
     </style>
 </head>
 <body>
-    <h1>🏗️ Setup Tournament: {{ tournament.name }}</h1>
-    <p><strong>Total Teams:</strong> {{ tournament.total_teams }} | <strong>Groups:</strong> {{ tournament.total_groups }}</p>
+
+    <h1>⚙️ Setup Tournament: <em>{{ tournament.name }}</em></h1>
+    <p>Total Teams: <strong>{{ tournament.total_teams }}</strong> | Groups: <strong>{{ tournament.total_groups }}</strong></p>
 
     <form method="POST">
         {% csrf_token %}
@@ -63,9 +66,10 @@
                 </li>
             {% endfor %}
         </ul>
-        <button type="submit">Create Groups & Assign Teams</button>
+        <button type="submit">✅ Finalize & Generate Groups</button>
     </form>
 
-    <a href="{% url 'home' %}">⬅ Back to Home</a>
+    <p><a href="{% url 'home' %}">⬅ Back to Home</a></p>
+
 </body>
 </html>
