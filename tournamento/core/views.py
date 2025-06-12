@@ -78,3 +78,11 @@ def tournament_detail(request, tournament_id):
         'tournament': tournament,
         'groups': groups,
     })
+def tournament_detail(request, tournament_id):
+    tournament = get_object_or_404(Tournament, id=tournament_id)
+    groups = tournament.groups.prefetch_related('teams', 'matches')
+
+    return render(request, 'core/tournament_detail.html', {
+        'tournament': tournament,
+        'groups': groups,
+    })
