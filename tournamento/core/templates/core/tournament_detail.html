@@ -1,38 +1,224 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ tournament.name }} | Tournament Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .tournament-info {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            text-align: center;
+        }
+
+        .tournament-info p {
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        .tournament-info strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .groups-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .group-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .group-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h2 {
+            color: var(--text);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        h3 {
+            color: var(--secondary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .teams-list, .matches-list {
+            list-style: none;
+        }
+
+        .team-item {
+            background: var(--background);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .match-item {
+            background: var(--background);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .match-teams {
+            font-weight: 500;
+        }
+
+        .match-score {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .match-not-played {
+            color: var(--warning);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            margin-bottom: 2rem;
+        }
+
+        .back-link:hover {
+            color: var(--primary-dark);
+            text-decoration: none;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .groups-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>{{ tournament.name }} 🏆</h1>
-    <p>Total Teams: {{ tournament.total_teams }} | Groups: {{ tournament.total_groups }}</p>
-    <p><a href="{% url 'home' %}">⬅ Back to Home</a></p>
+    <div class="header">
+        <h1>{{ tournament.name }} 🏆</h1>
+    </div>
 
-    {% for group in groups %}
-        <hr>
-        <h2>{{ group.name }}</h2>
+    <div class="tournament-info">
+        <p>
+            Total Teams: <strong>{{ tournament.total_teams }}</strong> • 
+            Groups: <strong>{{ tournament.total_groups }}</strong>
+        </p>
+    </div>
 
-        <h3>Teams</h3>
-        <ul>
-            {% for team in group.teams.all %}
-                <li>{{ team.name }}</li>
-            {% endfor %}
-        </ul>
+    <a href="{% url 'home' %}" class="back-link">
+        <span>⬅</span>
+        Back to Home
+    </a>
 
-        <h3>Matches</h3>
-        <ul>
-            {% for match in group.matches.all %}
-                <li>{{ match.team_a.name }} vs {{ match.team_b.name }} – 
-                    {% if match.played %}
-                        {{ match.score_a }} : {{ match.score_b }}
-                    {% else %}
-                        Not Played Yet
-                    {% endif %}
-                </li>
-            {% empty %}
-                <li>No matches generated.</li>
-            {% endfor %}
-        </ul>
-    {% endfor %}
+    <div class="groups-container">
+        {% for group in groups %}
+            <div class="group-card">
+                <div class="group-header">
+                    <h2>{{ group.name }}</h2>
+                </div>
+
+                <h3>Teams</h3>
+                <ul class="teams-list">
+                    {% for team in group.teams.all %}
+                        <li class="team-item">{{ team.name }}</li>
+                    {% endfor %}
+                </ul>
+
+                <h3>Matches</h3>
+                <ul class="matches-list">
+                    {% for match in group.matches.all %}
+                        <li class="match-item">
+                            <span class="match-teams">
+                                {{ match.team_a.name }} vs {{ match.team_b.name }}
+                            </span>
+                            {% if match.played %}
+                                <span class="match-score">
+                                    {{ match.score_a }} : {{ match.score_b }}
+                                </span>
+                            {% else %}
+                                <span class="match-not-played">
+                                    Not Played Yet
+                                </span>
+                            {% endif %}
+                        </li>
+                    {% empty %}
+                        <li class="match-item">
+                            <span class="match-not-played">No matches generated</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    </div>
 </body>
 </html>
