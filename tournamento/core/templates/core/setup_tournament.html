@@ -2,74 +2,201 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Setup Tournament | {{ tournament.name }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f5f8fa;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
         }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
         h1 {
-            color: #2E8B57;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-weight: 700;
         }
+
+        .tournament-info {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            text-align: center;
+        }
+
+        .tournament-info p {
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        .tournament-info strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
         form {
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            width: 400px;
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
         }
-        input, button {
+
+        h3 {
+            color: var(--text);
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .team-list {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .team-input {
+            position: relative;
+        }
+
+        .team-input input {
             width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
+            padding: 0.75rem;
+            padding-left: 2.5rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
         }
+
+        .team-input input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .team-number {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
         button {
-            background-color: #2E8B57;
+            background-color: var(--primary);
             color: white;
-            font-weight: bold;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
+            transition: background-color 0.2s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
+
         button:hover {
-            background-color: #276947;
+            background-color: var(--primary-dark);
         }
-        ul {
-            padding-left: 0;
-            list-style-type: none;
-        }
-        li {
-            margin-bottom: 10px;
-        }
-        a {
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
             text-decoration: none;
-            color: #007BFF;
+            font-weight: 500;
+            transition: color 0.2s ease;
         }
-        a:hover {
-            text-decoration: underline;
+
+        .back-link:hover {
+            color: var(--primary-dark);
+            text-decoration: none;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+            
+            form {
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="header">
+        <h1>⚙️ Setup Tournament</h1>
+    </div>
 
-    <h1>⚙️ Setup Tournament: <em>{{ tournament.name }}</em></h1>
-    <p>Total Teams: <strong>{{ tournament.total_teams }}</strong> | Groups: <strong>{{ tournament.total_groups }}</strong></p>
+    <div class="tournament-info">
+        <p>
+            <strong>{{ tournament.name }}</strong><br>
+            Total Teams: <strong>{{ tournament.total_teams }}</strong> • 
+            Groups: <strong>{{ tournament.total_groups }}</strong>
+        </p>
+    </div>
 
     <form method="POST">
         {% csrf_token %}
         <h3>Enter Team Names</h3>
-        <ul>
+        <div class="team-list">
             {% for i in team_count %}
-                <li>
-                    <input type="text" name="team_names" placeholder="Team {{ forloop.counter }}" required>
-                </li>
+                <div class="team-input">
+                    <span class="team-number">{{ forloop.counter }}.</span>
+                    <input type="text" 
+                           name="team_names" 
+                           placeholder="Enter team name" 
+                           required
+                           autocomplete="off">
+                </div>
             {% endfor %}
-        </ul>
-        <button type="submit">✅ Finalize & Generate Groups</button>
+        </div>
+        <button type="submit">
+            <span>✅</span>
+            Finalize & Generate Groups
+        </button>
     </form>
 
-    <p><a href="{% url 'home' %}">⬅ Back to Home</a></p>
-
+    <a href="{% url 'home' %}" class="back-link">
+        <span>⬅</span>
+        Back to Home
+    </a>
 </body>
 </html>
