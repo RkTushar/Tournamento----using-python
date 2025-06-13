@@ -2,103 +2,241 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tournamento | Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f5f8fa;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
         h1 {
-            color: #2E8B57;
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-weight: 700;
         }
+
+        .subtitle {
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        h2 {
+            color: var(--text);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
         form {
-            background: #ffffff;
-            padding: 20px;
-            border: 1px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        input {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
             border-radius: 8px;
-            width: 350px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
         }
-        input, button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
+
         button {
-            background-color: #2E8B57;
+            background-color: var(--primary);
             color: white;
-            font-weight: bold;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-top: 1rem;
         }
+
         button:hover {
-            background-color: #276947;
+            background-color: var(--primary-dark);
         }
-        ul {
-            margin-top: 30px;
-            padding-left: 20px;
+
+        .tournament-list {
+            list-style: none;
         }
-        li {
-            margin-bottom: 12px;
-            background: #fff;
-            padding: 10px;
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+
+        .tournament-item {
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
         }
-        a {
+
+        .tournament-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .tournament-name {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .tournament-details {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .tournament-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .tournament-actions a {
+            color: var(--primary);
             text-decoration: none;
-            color: #007BFF;
-            margin-left: 10px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
         }
-        a:hover {
+
+        .tournament-actions a:hover {
+            color: var(--primary-dark);
             text-decoration: underline;
         }
-        hr {
-            margin-top: 40px;
-            margin-bottom: 20px;
-            border: 0;
-            height: 1px;
-            background: #ddd;
+
+        .empty-state {
+            text-align: center;
+            color: var(--secondary);
+            padding: 2rem;
+            background: var(--surface);
+            border-radius: 8px;
+            border: 2px dashed var(--border);
         }
     </style>
 </head>
 <body>
-    <h1>🏆 Welcome to Tournamento</h1>
-    <p>Manage your tournaments efficiently with our system.</p>
+    <div class="header">
+        <h1>🏆 Tournamento</h1>
+        <p class="subtitle">Manage your tournaments efficiently with our system</p>
+    </div>
 
-    <h2>Create a New Tournament</h2>
-    <form method="post">
-        {% csrf_token %}
-        <label for="name">Tournament Name:</label>
-        <input type="text" id="name" name="name" required>
+    <div class="container">
+        <div class="card">
+            <h2>Create a New Tournament</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">Tournament Name</label>
+                    <input type="text" id="name" name="name" required placeholder="Enter tournament name">
+                </div>
 
-        <label for="total_teams">Total Teams:</label>
-        <input type="number" id="total_teams" name="total_teams" required>
+                <div class="form-group">
+                    <label for="total_teams">Total Teams</label>
+                    <input type="number" id="total_teams" name="total_teams" required min="2" placeholder="Enter number of teams">
+                </div>
 
-        <label for="total_groups">Total Groups:</label>
-        <input type="number" id="total_groups" name="total_groups" required>
+                <div class="form-group">
+                    <label for="total_groups">Total Groups</label>
+                    <input type="number" id="total_groups" name="total_groups" required min="1" placeholder="Enter number of groups">
+                </div>
 
-        <button type="submit">Create Tournament</button>
-    </form>
+                <button type="submit">Create Tournament</button>
+            </form>
+        </div>
 
-    <hr>
-
-    <h2>Existing Tournaments</h2>
-    <ul>
-        {% for tournament in tournaments %}
-            <li>
-                <strong>{{ tournament.name }}</strong> — 
-                {{ tournament.total_teams }} teams, {{ tournament.total_groups }} groups
-                [
-                    <a href="{% url 'setup_tournament' tournament.id %}">Setup</a> |
-                    <a href="{% url 'tournament_detail' tournament.id %}">View</a>
-                ]
-            </li>
-        {% empty %}
-            <li>No tournaments created yet.</li>
-        {% endfor %}
-    </ul>
+        <div class="card">
+            <h2>Existing Tournaments</h2>
+            <ul class="tournament-list">
+                {% for tournament in tournaments %}
+                    <li class="tournament-item">
+                        <div class="tournament-name">{{ tournament.name }}</div>
+                        <div class="tournament-details">
+                            {{ tournament.total_teams }} teams • {{ tournament.total_groups }} groups
+                        </div>
+                        <div class="tournament-actions">
+                            <a href="{% url 'setup_tournament' tournament.id %}">Setup Tournament</a>
+                            <a href="{% url 'tournament_detail' tournament.id %}">View Details</a>
+                        </div>
+                    </li>
+                {% empty %}
+                    <div class="empty-state">
+                        No tournaments created yet. Create your first tournament to get started!
+                    </div>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 </body>
 </html>
