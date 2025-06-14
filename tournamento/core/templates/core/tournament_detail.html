@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>{{ tournament.name }} | Tournament Details</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -67,7 +67,7 @@
 
         .groups-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
             gap: 2rem;
             margin-bottom: 2rem;
         }
@@ -136,6 +136,18 @@
             font-weight: 500;
         }
 
+        .set-score {
+            color: var(--primary);
+            font-weight: 500;
+            text-decoration: none;
+            margin-left: 1rem;
+        }
+
+        .set-score:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
         .back-link {
             display: inline-flex;
             align-items: center;
@@ -156,7 +168,6 @@
             body {
                 padding: 1rem;
             }
-            
             .groups-container {
                 grid-template-columns: 1fr;
             }
@@ -176,8 +187,7 @@
     </div>
 
     <a href="{% url 'home' %}" class="back-link">
-        <span>⬅</span>
-        Back to Home
+        ⬅ Back to Home
     </a>
 
     <div class="groups-container">
@@ -203,11 +213,12 @@
                             </span>
                             {% if match.played %}
                                 <span class="match-score">
-                                    {{ match.score_a }} : {{ match.score_b }}
+                                   {{ match.score_a }} : {{ match.score_b }}
                                 </span>
                             {% else %}
                                 <span class="match-not-played">
-                                    Not Played Yet
+                                   Not Played Yet
+                                   <a class="set-score" href="{% url 'update_match_score' match.id %}">Set Score</a>
                                 </span>
                             {% endif %}
                         </li>
