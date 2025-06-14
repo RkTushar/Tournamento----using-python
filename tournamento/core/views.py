@@ -78,3 +78,15 @@ def tournament_detail(request, tournament_id):
         'tournament': tournament,
         'groups': groups,
     })
+
+def update_match_score(request, match_id):
+    match = get_object_or_404(Match, id=match_id)
+
+    if request.method == "POST":
+        match.score_a = int(request.POST.get("score_a"))
+        match.score_b = int(request.POST.get("score_b"))
+        match.played = True
+        match.save()
+        return redirect("tournament_detail", tournament_id=match.group.tournament.id)
+
+    return render(request, "core/update_match_score.html", {"match": match})
