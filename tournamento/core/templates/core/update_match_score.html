@@ -7,8 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
             --secondary: #64748b;
             --background: #f8fafc;
             --surface: #ffffff;
@@ -16,6 +16,9 @@
             --border: #e2e8f0;
             --success: #22c55e;
             --warning: #f59e0b;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
 
         * {
@@ -30,74 +33,96 @@
             color: var(--text);
             line-height: 1.6;
             padding: 2rem;
-            max-width: 500px;
+            max-width: 600px;
             margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            width: 100%;
         }
 
         h1 {
-            font-size: 2rem;
-            color: var(--primary);
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 1rem;
             font-weight: 700;
         }
 
         .form-container {
             background: var(--surface);
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
             margin-bottom: 2rem;
             text-align: center;
+            width: 100%;
+            transition: transform 0.2s ease;
+        }
+
+        .form-container:hover {
+            transform: translateY(-2px);
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             text-align: left;
         }
 
         .form-group label {
             color: var(--text);
             font-size: 1.1rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
             display: block;
         }
 
         .form-group input {
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            border: 1px solid var(--border);
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            border: 2px solid var(--border);
             width: 100%;
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--text);
             background: var(--background);
+            transition: all 0.2s ease;
         }
 
         .form-group input:focus {
             outline: none;
-            border: 1px solid var(--primary);
-            box-shadow: 0 0 5px var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
         }
 
         button {
-            padding: 0.75rem 1.5rem;
-            background: var(--primary);
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: #ffffff;
-            font-size: 1rem;
-            font-weight: 500;
+            font-size: 1.1rem;
+            font-weight: 600;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: all 0.2s ease;
+            width: 100%;
+            margin-top: 1rem;
         }
 
         button:hover {
-            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        button:active {
+            transform: translateY(0);
         }
 
         a.back-link {
@@ -106,14 +131,31 @@
             gap: 0.5rem;
             color: var(--primary);
             text-decoration: none;
-            font-weight: 500;
-            margin-bottom: 2rem;
-            transition: color 0.2s ease;
+            font-weight: 600;
+            margin-top: 2rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            background: rgba(79, 70, 229, 0.1);
         }
 
         a.back-link:hover {
-            color: var(--primary-dark);
-            text-decoration: none;
+            background: rgba(79, 70, 229, 0.15);
+            transform: translateX(-4px);
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .form-container {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
@@ -127,15 +169,15 @@
             {% csrf_token %}
             <div class="form-group">
                 <label>{{ match.team_a.name }} Score</label>
-                <input type="number" name="score_a" min="0" required>
+                <input type="number" name="score_a" min="0" required placeholder="Enter score">
             </div>
 
             <div class="form-group">
                 <label>{{ match.team_b.name }} Score</label>
-                <input type="number" name="score_b" min="0" required>
+                <input type="number" name="score_b" min="0" required placeholder="Enter score">
             </div>
 
-            <button type="submit">Save</button>
+            <button type="submit">Save Score</button>
         </form>
     </div>
 
