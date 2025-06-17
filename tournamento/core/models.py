@@ -14,9 +14,16 @@ class Team(models.Model):
     name = models.CharField(max_length=100)
     group = models.ForeignKey('Group', on_delete=models.SET_NULL, null=True, blank=True, related_name='teams')
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='teams')
+    points = models.PositiveIntegerField(default=0)
+    goals_for = models.PositiveIntegerField(default=0)
+    goals_against = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.name
+
+    @property
+    def goal_difference(self):
+        return self.goals_for - self.goals_against
 
 
 class Group(models.Model):
