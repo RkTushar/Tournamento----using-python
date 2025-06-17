@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Tournament, Team, Group, Match
-import random
 import itertools
 
 def home(request):
@@ -8,7 +7,6 @@ def home(request):
         name = request.POST.get('name')
         total_teams = int(request.POST.get('total_teams'))
         total_groups = int(request.POST.get('total_groups'))
-
         Tournament.objects.create(
             name=name,
             total_teams=total_teams,
@@ -17,13 +15,16 @@ def home(request):
         return redirect('home')
 
     tournaments = Tournament.objects.all().order_by('-created_at')
-    return render(request, 'core/home.html', {'tournaments': tournaments})
+    return render(request, 'core/home.html', {
+        'tournaments': tournaments
+    })
+
 
 def generate_group_fixtures(group):
-    teams = list(group.teams.all())
+    teams = list(group.teams.all())  # All teams in this group
     matches = []
 
-    # Round-robin match generation: each pair plays one match
+    # Generate a round-robin match for each pair of teams
     for team_a, team_b in itertools.combinations(teams, 2):
         match = Match.objects.create(
             group=group,
@@ -33,6 +34,7 @@ def generate_group_fixtures(group):
         matches.append(match)
 
     return matches
+
 
 def setup_tournament(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
@@ -46,38 +48,44 @@ def setup_tournament(request, tournament_id):
         tournament.groups.all().delete()
         tournament.teams.all().delete()
 
-        # Create groups named A, B, C, ...
+        # Create groups
         groups = []
         for i in range(tournament.total_groups):
             group_name = chr(ord('A') + i)
             group = Group.objects.create(name=f"Group {group_name}", tournament=tournament)
             groups.append(group)
 
-        # Create teams with names from user input, assign evenly to groups
+        # Create teams and assign evenly to groups
         for idx, name in enumerate(team_names):
             group = groups[idx % tournament.total_groups]
             Team.objects.create(name=name, tournament=tournament, group=group)
 
-        # Generate fixtures for each group
+        # Generate fixture for each group
         for group in groups:
             generate_group_fixtures(group)
 
         return redirect('home')
 
-    # GET request: render form to input team names
     return render(request, 'core/setup_tournament.html', {
         'tournament': tournament,
         'team_count': team_count,
     })
 
+
 def tournament_detail(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
     groups = tournament.groups.all().prefetch_related('teams', 'matches')
 
+    groups_data = []
+    for group in groups:
+        standings = group.calculate_standings()
+        groups_data.append((group, standings))
+
     return render(request, 'core/tournament_detail.html', {
         'tournament': tournament,
-        'groups': groups,
+        'groups_data': groups_data,
     })
+
 
 def update_match_score(request, match_id):
     match = get_object_or_404(Match, id=match_id)
@@ -90,3 +98,4 @@ def update_match_score(request, match_id):
         return redirect("tournament_detail", tournament_id=match.group.tournament.id)
 
     return render(request, "core/update_match_score.html", {"match": match})
+
