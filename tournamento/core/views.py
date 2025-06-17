@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Tournament, Team, Group, Match
 import itertools
 
+
 def home(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -76,14 +77,9 @@ def tournament_detail(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
     groups = tournament.groups.all().prefetch_related('teams', 'matches')
 
-    groups_data = []
-    for group in groups:
-        standings = group.calculate_standings()
-        groups_data.append((group, standings))
-
     return render(request, 'core/tournament_detail.html', {
         'tournament': tournament,
-        'groups_data': groups_data,
+        'groups': groups,
     })
 
 
@@ -91,11 +87,33 @@ def update_match_score(request, match_id):
     match = get_object_or_404(Match, id=match_id)
 
     if request.method == "POST":
-        match.score_a = int(request.POST.get("score_a"))
-        match.score_b = int(request.POST.get("score_b"))
+        score_a = int(request.POST.get("score_a"))
+        score_b = int(request.POST.get("score_b"))
+        match.score_a = score_a
+        match.score_b = score_b
         match.played = True
         match.save()
+
+        team_a = match.team_a
+        team_b = match.team_b
+
+        team_a.goals_for += score_a
+        team_a.goals_against += score_b
+
+        team_b.goals_for += score_b
+        team_b.goals_against += score_a
+
+        if score_a > score_b:
+            team_a.points += 3
+        elif score_a == score_b:
+            team_a.points += 1
+            team_b.points += 1
+        else:
+            team_b.points += 3
+
+        team_a.save()
+        team_b.save()
+
         return redirect("tournament_detail", tournament_id=match.group.tournament.id)
 
     return render(request, "core/update_match_score.html", {"match": match})
-
