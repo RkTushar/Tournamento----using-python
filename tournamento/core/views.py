@@ -77,9 +77,14 @@ def tournament_detail(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
     groups = tournament.groups.all().prefetch_related('teams', 'matches')
 
+    groups_data = []
+    for group in groups:
+        standings = group.calculate_standings()
+        groups_data.append((group, standings))
+
     return render(request, 'core/tournament_detail.html', {
         'tournament': tournament,
-        'groups': groups,
+        'groups_data': groups_data,
     })
 
 
@@ -117,3 +122,4 @@ def update_match_score(request, match_id):
         return redirect("tournament_detail", tournament_id=match.group.tournament.id)
 
     return render(request, "core/update_match_score.html", {"match": match})
+
