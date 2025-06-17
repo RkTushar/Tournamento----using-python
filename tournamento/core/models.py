@@ -26,6 +26,49 @@ class Group(models.Model):
     def __str__(self):
         return f"{self.name} - {self.tournament.name}"
 
+    def calculate_standings(self):
+        """
+        Calculate standings for the group based on match results.
+        """
+        standings = []
+
+        for team in self.teams.all():
+            team_stats = {
+                'team': team,
+                'points': 0,
+                'goals_for': 0,
+                'goals_against': 0,
+                'matches_played': 0,
+            }
+
+            for match in self.matches.all():
+                if match.played:
+                    if match.team_a == team:
+                        team_stats['goals_for'] += match.score_a
+                        team_stats['goals_against'] += match.score_b
+                        team_stats['matches_played'] += 1
+                        if match.score_a > match.score_b:
+                            team_stats['points'] += 3
+                        elif match.score_a == match.score_b:
+                            team_stats['points'] += 1
+
+                    elif match.team_b == team:
+                        team_stats['goals_for'] += match.score_b
+                        team_stats['goals_against'] += match.score_a
+                        team_stats['matches_played'] += 1
+                        if match.score_b > match.score_a:
+                            team_stats['points'] += 3
+                        elif match.score_a == match.score_b:
+                            team_stats['points'] += 1
+
+            standings.append(team_stats)
+
+        standings.sort(
+            key=lambda x: (-x['points'], -(x['goals_for'] - x['goals_against']), -x['goals_for']),
+        )
+
+        return standings
+
 
 class Match(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='matches')
@@ -37,3 +80,4 @@ class Match(models.Model):
 
     def __str__(self):
         return f"{self.team_a.name} vs {self.team_b.name}"
+
