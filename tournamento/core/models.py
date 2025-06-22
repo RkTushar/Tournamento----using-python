@@ -1,5 +1,13 @@
 from django.db import models
 
+# Match stage options for knockout
+MATCH_STAGES = [
+    ('Group', 'Group Stage'),
+    ('Quarter', 'Quarter Final'),
+    ('Semi', 'Semi Final'),
+    ('Final', 'Final'),
+]
+
 class Tournament(models.Model):
     name = models.CharField(max_length=100)
     total_teams = models.PositiveIntegerField()
@@ -68,12 +76,14 @@ class Group(models.Model):
 
 
 class Match(models.Model):
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='matches')
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='matches', null=True, blank=True)
     team_a = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='team_a_matches')
     team_b = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='team_b_matches')
     score_a = models.IntegerField(default=0)
     score_b = models.IntegerField(default=0)
     played = models.BooleanField(default=False)
+    
+    stage = models.CharField(max_length=20, choices=MATCH_STAGES, default='Group')
 
     def __str__(self):
         return f"{self.team_a.name} vs {self.team_b.name}"
