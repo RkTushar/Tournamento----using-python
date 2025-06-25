@@ -8,20 +8,12 @@ MATCH_STAGES = [
     ('Final', 'Final'),
 ]
 
+
 class Tournament(models.Model):
     name = models.CharField(max_length=100)
     total_teams = models.PositiveIntegerField()
     total_groups = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-
-
-class Team(models.Model):
-    name = models.CharField(max_length=100)
-    group = models.ForeignKey('Group', on_delete=models.SET_NULL, null=True, blank=True, related_name='teams')
-    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='teams')
 
     def __str__(self):
         return self.name
@@ -75,14 +67,23 @@ class Group(models.Model):
         return standings
 
 
+class Team(models.Model):
+    name = models.CharField(max_length=100)
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True, related_name='teams')
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='teams')
+
+    def __str__(self):
+        return self.name
+
+
 class Match(models.Model):
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='matches')
     group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='matches', null=True, blank=True)
     team_a = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='team_a_matches')
     team_b = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='team_b_matches')
     score_a = models.IntegerField(default=0)
     score_b = models.IntegerField(default=0)
     played = models.BooleanField(default=False)
-    
     stage = models.CharField(max_length=20, choices=MATCH_STAGES, default='Group')
 
     def __str__(self):
