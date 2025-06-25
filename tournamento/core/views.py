@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Tournament, Team, Group, Match
 import itertools
 
+
 def home(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -26,10 +27,10 @@ def generate_group_fixtures(group):
     for team_a, team_b in itertools.combinations(teams, 2):
         match = Match.objects.create(
             group=group,
-            tournament=group.tournament,
             team_a=team_a,
             team_b=team_b,
-            stage='Group'
+            stage='Group',
+            tournament=group.tournament
         )
         matches.append(match)
     return matches
@@ -73,23 +74,19 @@ def tournament_detail(request, tournament_id):
 
     groups_data = []
     all_group_matches_played = True
-    knockout_matches_exist = Match.objects.filter(
-        tournament=tournament,
-        stage__in=['Quarter', 'Semi', 'Final']
-    ).exists()
-
     for group in groups:
         standings = group.calculate_standings()
         groups_data.append((group, standings))
-
         if group.matches.filter(played=False).exists():
             all_group_matches_played = False
 
-    # Auto-generate knockout (Quarterfinal) if group stage complete
-    if all_group_matches_played and not knockout_matches_exist:
+    knockout_matches = Match.objects.filter(tournament=tournament, stage__in=['Quarter', 'Semi', 'Final'])
+
+    # Auto-generate Quarterfinals
+    if all_group_matches_played and not knockout_matches.filter(stage='Quarter').exists():
         top_teams = []
         for _, standings in groups_data:
-            top_teams.extend([item['team'] for item in standings[:2]])  # Change [:1] for only winners
+            top_teams.extend([item['team'] for item in standings[:2]])
 
         for i in range(0, len(top_teams), 2):
             if i + 1 < len(top_teams):
@@ -97,11 +94,47 @@ def tournament_detail(request, tournament_id):
                     team_a=top_teams[i],
                     team_b=top_teams[i + 1],
                     tournament=tournament,
-                    stage='Quarter',
-                    played=False
+                    stage='Quarter'
                 )
 
-    knockout_matches = Match.objects.filter(
+    # Auto-generate Semifinals
+    quarterfinals = knockout_matches.filter(stage='Quarter', played=True)
+    if quarterfinals.count() == 4 and not knockout_matches.filter(stage='Semi').exists():
+        winners = []
+        for match in quarterfinals:
+            if match.score_a > match.score_b:
+                winners.append(match.team_a)
+            else:
+                winners.append(match.team_b)
+
+        for i in range(0, len(winners), 2):
+            if i + 1 < len(winners):
+                Match.objects.create(
+                    team_a=winners[i],
+                    team_b=winners[i + 1],
+                    tournament=tournament,
+                    stage='Semi'
+                )
+
+    # Auto-generate Final
+    semifinals = knockout_matches.filter(stage='Semi', played=True)
+    if semifinals.count() == 2 and not knockout_matches.filter(stage='Final').exists():
+        finalists = []
+        for match in semifinals:
+            if match.score_a > match.score_b:
+                finalists.append(match.team_a)
+            else:
+                finalists.append(match.team_b)
+
+        if len(finalists) == 2:
+            Match.objects.create(
+                team_a=finalists[0],
+                team_b=finalists[1],
+                tournament=tournament,
+                stage='Final'
+            )
+
+    updated_knockouts = Match.objects.filter(
         tournament=tournament,
         stage__in=['Quarter', 'Semi', 'Final']
     ).order_by('stage')
@@ -109,7 +142,7 @@ def tournament_detail(request, tournament_id):
     return render(request, 'core/tournament_detail.html', {
         'tournament': tournament,
         'groups_data': groups_data,
-        'knockout_matches': knockout_matches,
+        'knockout_matches': updated_knockouts,
     })
 
 
@@ -123,27 +156,6 @@ def update_match_score(request, match_id):
         match.score_b = score_b
         match.played = True
         match.save()
-
-        # Group stage point logic
-        if match.stage == 'Group':
-            team_a = match.team_a
-            team_b = match.team_b
-
-            team_a.goals_for += score_a
-            team_a.goals_against += score_b
-            team_b.goals_for += score_b
-            team_b.goals_against += score_a
-
-            if score_a > score_b:
-                team_a.points += 3
-            elif score_a == score_b:
-                team_a.points += 1
-                team_b.points += 1
-            else:
-                team_b.points += 3
-
-            team_a.save()
-            team_b.save()
 
         return redirect("tournament_detail", tournament_id=match.tournament.id)
 
