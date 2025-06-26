@@ -139,10 +139,20 @@ def tournament_detail(request, tournament_id):
         stage__in=['Quarter', 'Semi', 'Final']
     ).order_by('stage')
 
+    # 🎉 Winner Detection
+    final_match = updated_knockouts.filter(stage='Final', played=True).first()
+    winner = None
+    if final_match:
+        if final_match.score_a > final_match.score_b:
+            winner = final_match.team_a
+        elif final_match.score_b > final_match.score_a:
+            winner = final_match.team_b
+
     return render(request, 'core/tournament_detail.html', {
         'tournament': tournament,
         'groups_data': groups_data,
         'knockout_matches': updated_knockouts,
+        'winner': winner,  # 🏆 Add to template
     })
 
 
