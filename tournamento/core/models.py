@@ -35,6 +35,7 @@ class Group(models.Model):
                 'points': 0,
                 'goals_for': 0,
                 'goals_against': 0,
+                'goal_diff': 0,
                 'matches_played': 0,
             }
 
@@ -58,11 +59,16 @@ class Group(models.Model):
                         elif match.score_a == match.score_b:
                             team_stats['points'] += 1
 
+            team_stats['goal_diff'] = team_stats['goals_for'] - team_stats['goals_against']
             standings.append(team_stats)
 
         standings.sort(
-            key=lambda x: (-x['points'], -(x['goals_for'] - x['goals_against']), -x['goals_for']),
+            key=lambda x: (-x['points'], -x['goal_diff'], -x['goals_for'])
         )
+
+        # Assign rank
+        for i, item in enumerate(standings, start=1):
+            item['rank'] = i
 
         return standings
 
