@@ -85,7 +85,7 @@
             font-weight: 600;
             margin: 1.5rem 0 1rem;
         }
-        .teams-list, .matches-list, .standings-list {
+        .teams-list, .matches-list {
             list-style: none;
         }
         .team-item {
@@ -202,17 +202,21 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>Rank</th>
                             <th>Team</th>
                             <th>Points</th>
-                            <th>Goals For</th>
-                            <th>Goals Against</th>
+                            <th>GD</th>
+                            <th>GF</th>
+                            <th>GA</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for item in standings %}
                         <tr>
+                            <td>{{ item.rank }}</td>
                             <td>{{ item.team.name }}</td>
                             <td>{{ item.points }}</td>
+                            <td>{{ item.goal_diff }}</td>
                             <td>{{ item.goals_for }}</td>
                             <td>{{ item.goals_against }}</td>
                         </tr>
