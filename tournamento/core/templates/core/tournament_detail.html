@@ -241,6 +241,7 @@
                             {% if match.played %}
                                 <span class="match-score">
                                     {{ match.score_a }} : {{ match.score_b }}
+                                    <a class="set-score" href="{% url 'update_match_score' match.id %}">Edit</a>
                                 </span>
                             {% else %}
                                 <span class="match-not-played">
@@ -273,7 +274,10 @@
                         {{ match.team_a.name }} vs {{ match.team_b.name }}
                     </span>
                     {% if match.played %}
-                        <span class="match-score">{{ match.score_a }} : {{ match.score_b }}</span>
+                        <span class="match-score">
+                            {{ match.score_a }} : {{ match.score_b }}
+                            <a class="set-score" href="{% url 'update_match_score' match.id %}">Edit</a>
+                        </span>
                     {% else %}
                         <span class="match-not-played">
                             Not Played Yet
