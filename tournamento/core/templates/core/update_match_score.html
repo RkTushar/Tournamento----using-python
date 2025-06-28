@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Update Match Score | {{ match.team_a.name }} vs {{ match.team_b.name }}</title>
+    <title>Update Match Score</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -44,25 +44,18 @@
 
         .header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            width: 100%;
         }
 
         h1 {
-            font-size: 2rem;
+            font-size: 2.5rem;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
             font-weight: 700;
-        }
-
-        .match-info {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--secondary);
-            margin-top: 0.5rem;
-            margin-bottom: 2rem;
-            text-align: center;
         }
 
         .form-container {
@@ -70,6 +63,8 @@
             padding: 2rem;
             border-radius: 16px;
             box-shadow: var(--shadow-lg);
+            margin-bottom: 2rem;
+            text-align: center;
             width: 100%;
             transition: transform 0.2s ease;
         }
@@ -80,42 +75,46 @@
 
         .form-group {
             margin-bottom: 2rem;
+            text-align: left;
         }
 
         .form-group label {
-            display: block;
-            font-size: 1rem;
+            color: var(--text);
+            font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
+            display: block;
         }
 
         .form-group input {
-            width: 100%;
-            padding: 0.9rem 1.2rem;
-            font-size: 1rem;
+            padding: 1rem 1.25rem;
             border-radius: 12px;
             border: 2px solid var(--border);
+            width: 100%;
+            font-size: 1.1rem;
+            color: var(--text);
             background: var(--background);
             transition: all 0.2s ease;
         }
 
         .form-group input:focus {
-            border-color: var(--primary);
             outline: none;
+            border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
         }
 
         button {
-            width: 100%;
             padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #ffffff;
             font-size: 1.1rem;
             font-weight: 600;
-            color: white;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             border: none;
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.2s ease;
+            width: 100%;
+            margin-top: 1rem;
         }
 
         button:hover {
@@ -123,21 +122,39 @@
             box-shadow: var(--shadow);
         }
 
-        .back-link {
-            margin-top: 2rem;
-            text-decoration: none;
-            display: inline-block;
-            font-weight: 600;
-            color: var(--primary);
-            background: rgba(79, 70, 229, 0.1);
-            padding: 0.75rem 1.25rem;
-            border-radius: 10px;
-            transition: all 0.2s ease;
+        button:active {
+            transform: translateY(0);
         }
 
-        .back-link:hover {
+        a.back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 2rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            background: rgba(79, 70, 229, 0.1);
+        }
+
+        a.back-link:hover {
             background: rgba(79, 70, 229, 0.15);
             transform: translateX(-4px);
+        }
+
+        .message-box {
+            background: var(--success);
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            width: 100%;
+            box-shadow: var(--shadow-sm);
         }
 
         @media (max-width: 640px) {
@@ -150,28 +167,38 @@
             }
 
             h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
         }
     </style>
 </head>
 <body>
+
     <div class="header">
         <h1>Update Score</h1>
-        <div class="match-info">{{ match.team_a.name }} vs {{ match.team_b.name }}</div>
     </div>
+
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+                <div class="message-box">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
     <div class="form-container">
         <form method="POST">
             {% csrf_token %}
             <div class="form-group">
-                <label for="score_a">{{ match.team_a.name }} Score</label>
-                <input type="number" name="score_a" id="score_a" min="0" required value="{{ match.score_a }}">
+                <label>{{ match.team_a.name }} Score</label>
+                <input type="number" name="score_a" min="0" required placeholder="Enter score">
             </div>
 
             <div class="form-group">
-                <label for="score_b">{{ match.team_b.name }} Score</label>
-                <input type="number" name="score_b" id="score_b" min="0" required value="{{ match.score_b }}">
+                <label>{{ match.team_b.name }} Score</label>
+                <input type="number" name="score_b" min="0" required placeholder="Enter score">
             </div>
 
             <button type="submit">Save Score</button>
@@ -181,5 +208,6 @@
     <a href="{% url 'tournament_detail' match.tournament.id %}" class="back-link">
         ⬅ Back to Tournament
     </a>
+
 </body>
 </html>
