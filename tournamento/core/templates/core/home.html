@@ -14,6 +14,7 @@
             --surface: #ffffff;
             --text: #1e293b;
             --border: #e2e8f0;
+            --danger: #dc2626;
         }
 
         * {
@@ -161,6 +162,8 @@
         .tournament-actions {
             display: flex;
             gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
         }
 
         .tournament-actions a {
@@ -173,6 +176,24 @@
 
         .tournament-actions a:hover {
             color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .tournament-actions form {
+            display: inline;
+        }
+
+        .tournament-actions button {
+            background: none;
+            border: none;
+            padding: 0;
+            color: var(--danger);
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .tournament-actions button:hover {
             text-decoration: underline;
         }
 
@@ -226,8 +247,14 @@
                             {{ tournament.total_teams }} teams • {{ tournament.total_groups }} groups
                         </div>
                         <div class="tournament-actions">
-                            <a href="{% url 'setup_tournament' tournament.id %}">Setup Tournament</a>
-                            <a href="{% url 'tournament_detail' tournament.id %}">View Details</a>
+                            <a href="{% url 'setup_tournament' tournament.id %}">Setup</a>
+                            <a href="{% url 'tournament_detail' tournament.id %}">View</a>
+                            <a href="{% url 'edit_tournament' tournament.id %}">Edit</a>
+
+                            <form method="POST" action="{% url 'delete_tournament' tournament.id %}" onsubmit="return confirm('Are you sure you want to delete this tournament?');">
+                                {% csrf_token %}
+                                <button type="submit">Delete</button>
+                            </form>
                         </div>
                     </li>
                 {% empty %}
