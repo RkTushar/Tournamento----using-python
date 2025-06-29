@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages  # ✅ NEW
 from .models import Tournament, Team, Group, Match
 import itertools
+from django.views.decorators.http import require_POST
 
 
 def home(request):
@@ -186,3 +187,10 @@ def edit_tournament(request, tournament_id):
     return render(request, 'core/edit_tournament.html', {
         'tournament': tournament
     })
+
+
+@require_POST
+def delete_tournament(request, tournament_id):
+    tournament = get_object_or_404(Tournament, id=tournament_id)
+    tournament.delete()
+    return redirect('home')
