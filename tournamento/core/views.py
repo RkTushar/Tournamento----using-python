@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages  # ✅ NEW
 from .models import Tournament, Team, Group, Match
 import itertools
 
@@ -139,7 +140,6 @@ def tournament_detail(request, tournament_id):
         stage__in=['Quarter', 'Semi', 'Final']
     ).order_by('stage')
 
-    # 🎉 Winner Detection
     final_match = updated_knockouts.filter(stage='Final', played=True).first()
     winner = None
     if final_match:
@@ -152,7 +152,7 @@ def tournament_detail(request, tournament_id):
         'tournament': tournament,
         'groups_data': groups_data,
         'knockout_matches': updated_knockouts,
-        'winner': winner,  # 🏆 Add to template
+        'winner': winner,
     })
 
 
@@ -167,6 +167,7 @@ def update_match_score(request, match_id):
         match.played = True
         match.save()
 
-        return redirect("tournament_detail", tournament_id=match.tournament.id)
+        messages.success(request, "✅ Score updated successfully!")  # ✅ Message
+        return redirect("update_match_score", match_id=match.id)  # Stay on page to see message
 
     return render(request, "core/update_match_score.html", {"match": match})
