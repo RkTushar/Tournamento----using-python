@@ -171,3 +171,18 @@ def update_match_score(request, match_id):
         return redirect("update_match_score", match_id=match.id)  # Stay on page to see message
 
     return render(request, "core/update_match_score.html", {"match": match})
+
+
+def edit_tournament(request, tournament_id):
+    tournament = get_object_or_404(Tournament, id=tournament_id)
+
+    if request.method == 'POST':
+        tournament.name = request.POST.get('name')
+        tournament.total_teams = int(request.POST.get('total_teams'))
+        tournament.total_groups = int(request.POST.get('total_groups'))
+        tournament.save()
+        return redirect('home')
+
+    return render(request, 'core/edit_tournament.html', {
+        'tournament': tournament
+    })
