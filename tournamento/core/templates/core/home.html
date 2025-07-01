@@ -247,13 +247,10 @@
                             {{ tournament.total_teams }} teams • {{ tournament.total_groups }} groups
                         </div>
                         <div class="tournament-actions">
-                            <a href="{% url 'tournament_detail' tournament.id %}">View</a>
+                            <a href="{% url 'setup_tournament' tournament.id %}">Setup Tournament</a>
+                            <a href="{% url 'tournament_detail' tournament.id %}">View Details</a>
                             <a href="{% url 'edit_tournament' tournament.id %}">Edit</a>
-
-                            <form method="POST" action="{% url 'delete_tournament' tournament.id %}" onsubmit="return confirm('Are you sure you want to delete this tournament?');">
-                                {% csrf_token %}
-                                <button type="submit">Delete</button>
-                            </form>
+                            <a href="{% url 'delete_tournament' tournament.id %}" onclick="return confirm('Are you sure you want to delete this tournament?');">Delete</a>
                         </div>
                     </li>
                 {% empty %}
