@@ -182,6 +182,7 @@ def edit_tournament(request, tournament_id):
         tournament.total_teams = int(request.POST.get('total_teams'))
         tournament.total_groups = int(request.POST.get('total_groups'))
         tournament.save()
+        messages.success(request, "✅ Tournament updated successfully!")  # ✅ Message
         return redirect('home')
 
     return render(request, 'core/edit_tournament.html', {
