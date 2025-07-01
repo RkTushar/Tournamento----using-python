@@ -83,14 +83,29 @@
 
         h1 {
             font-size: 4rem;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: white;
+            text-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.8),
+                0 0 40px rgba(255, 255, 255, 0.4),
+                0 4px 8px rgba(0, 0, 0, 0.3);
             margin-bottom: 1rem;
             font-weight: 800;
             letter-spacing: -0.02em;
             animation: fadeInUp 0.8s ease-out;
+            position: relative;
+        }
+
+        h1::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 20px;
+            z-index: -1;
+            backdrop-filter: blur(10px);
         }
 
         .subtitle {
