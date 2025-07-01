@@ -1,25 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Edit Tournament</title>
+  <meta charset="UTF-8">
+  <title>Edit Tournament</title>
+  <style>
+    body {
+        font-family: 'Inter', sans-serif;
+        padding: 2rem;
+        background: #f8fafc;
+        max-width: 600px;
+        margin: auto;
+    }
+    h1 {
+        color: #2563eb;
+        margin-bottom: 1.5rem;
+    }
+    label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+    input {
+        width: 100%;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+    }
+    button {
+        background-color: #2563eb;
+        color: white;
+        padding: 0.75rem 2rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+  </style>
 </head>
 <body>
-    <h1>Edit Tournament</h1>
+  <h1>Edit Tournament</h1>
+  <form method="post">
+    {% csrf_token %}
+    <label for="name">Tournament Name</label>
+    <input type="text" id="name" name="name" value="{{ tournament.name }}" required>
 
-    <form method="POST">
-        {% csrf_token %}
-        <label>Tournament Name:</label><br>
-        <input type="text" name="name" value="{{ tournament.name }}" required><br><br>
+    <label for="total_teams">Total Teams</label>
+    <input type="number" id="total_teams" name="total_teams" value="{{ tournament.total_teams }}" required min="2">
 
-        <label>Total Teams:</label><br>
-        <input type="number" name="total_teams" value="{{ tournament.total_teams }}" required><br><br>
+    <label for="total_groups">Total Groups</label>
+    <input type="number" id="total_groups" name="total_groups" value="{{ tournament.total_groups }}" required min="1">
 
-        <label>Total Groups:</label><br>
-        <input type="number" name="total_groups" value="{{ tournament.total_groups }}" required><br><br>
-
-        <button type="submit">Save Changes</button>
-    </form>
-
-    <a href="{% url 'home' %}">⬅ Back to Home</a>
+    <button type="submit">Update Tournament</button>
+  </form>
 </body>
 </html>
