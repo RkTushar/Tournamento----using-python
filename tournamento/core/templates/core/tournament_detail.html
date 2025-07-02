@@ -4,238 +4,626 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>{{ tournament.name }} | Tournament Details</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #2563eb;
+            --primary: #3b82f6;
             --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
             --secondary: #64748b;
             --background: #f8fafc;
             --surface: #ffffff;
             --text: #1e293b;
+            --text-light: #64748b;
             --border: #e2e8f0;
-            --success: #22c55e;
+            --success: #10b981;
+            --success-light: #d1fae5;
             --warning: #f59e0b;
+            --warning-light: #fef3c7;
+            --danger: #ef4444;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--background);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: var(--text);
+            min-height: 100vh;
             padding: 2rem;
-            max-width: 1000px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
+            background: var(--surface);
+            border-radius: 20px;
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
         }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
         .header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 3rem 2rem;
             text-align: center;
-            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
         }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
         h1 {
-            font-size: 2.5rem;
-            color: var(--primary);
+            font-size: 3rem;
+            font-weight: 800;
             margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .tournament-info {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            margin: 2rem auto 0;
+            max-width: 600px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .tournament-info p {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .tournament-info strong {
+            color: #fbbf24;
             font-weight: 700;
         }
-        .tournament-info {
-            background: var(--surface);
-            padding: 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            text-align: center;
+        
+        .content {
+            padding: 3rem 2rem;
         }
-        .tournament-info p {
-            color: var(--secondary);
-            font-size: 1.1rem;
-        }
-        .tournament-info strong {
-            color: var(--text);
-            font-weight: 600;
-        }
-        .groups-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-        .group-card {
-            background: var(--surface);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-        }
-        .group-header {
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border);
-        }
-        h2 {
-            color: var(--text);
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        h3 {
-            color: var(--secondary);
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin: 1.5rem 0 1rem;
-        }
-        .teams-list, .matches-list {
-            list-style: none;
-        }
-        .team-item {
-            background: var(--background);
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-        .match-item {
-            background: var(--background);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 0.75rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .match-teams {
-            font-weight: 500;
-        }
-        .match-score {
-            font-weight: 600;
-            color: var(--primary);
-        }
-        .match-not-played {
-            color: var(--warning);
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-        .set-score {
-            color: var(--primary);
-            font-weight: 500;
-            text-decoration: none;
-            margin-left: 1rem;
-        }
-        .set-score:hover {
-            color: var(--primary-dark);
-            text-decoration: underline;
-        }
+        
         .back-link {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
             color: var(--primary);
             text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary-light);
+            border-radius: 12px;
+            transition: all 0.3s ease;
             margin-bottom: 2rem;
+            border: 2px solid transparent;
         }
+        
         .back-link:hover {
-            color: var(--primary-dark);
-            text-decoration: none;
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
+        
+        .back-link i {
+            font-size: 1.2rem;
+        }
+        
+        .groups-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .group-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .group-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+        
+        .group-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .group-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+            position: relative;
+        }
+        
+        .group-header h2 {
+            color: var(--text);
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .group-header h2::before {
+            content: '🏆';
+            font-size: 1.5rem;
+        }
+        
+        h3 {
+            color: var(--text);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        h3::before {
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+        }
+        
+        h3:has(+ .teams-list)::before {
+            content: '\f0c0';
+            color: var(--primary);
+        }
+        
+        h3:has(+ .matches-list)::before {
+            content: '\f091';
+            color: var(--warning);
+        }
+        
+        h3:has(+ table)::before {
+            content: '\f080';
+            color: var(--success);
+        }
+        
+        .teams-list, .matches-list {
+            list-style: none;
+        }
+        
+        .team-item {
+            background: linear-gradient(135deg, var(--background) 0%, #f1f5f9 100%);
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .team-item::before {
+            content: '\f54e';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+        
+        .team-item:hover {
+            background: var(--primary-light);
+            transform: translateX(5px);
+        }
+        
+        .match-item {
+            background: linear-gradient(135deg, var(--background) 0%, #f1f5f9 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        
+        .match-item:hover {
+            background: var(--primary-light);
+            transform: translateX(5px);
+        }
+        
+        .match-teams {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .match-score {
+            font-weight: 700;
+            color: var(--success);
+            font-size: 1.2rem;
+            background: var(--success-light);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 2px solid var(--success);
+        }
+        
+        .match-not-played {
+            color: var(--warning);
+            font-size: 1rem;
+            font-weight: 600;
+            background: var(--warning-light);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 2px solid var(--warning);
+        }
+        
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 1.5rem;
+            background: var(--surface);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
         }
+        
         th, td {
-            padding: 0.75rem;
-            border: 1px solid var(--border);
+            padding: 1rem;
             text-align: left;
+            border-bottom: 1px solid var(--border);
         }
+        
         th {
-            background: var(--border);
-            color: var(--text);
-        }
-        .winner-announcement {
-            margin-top: 2rem;
-            padding: 1rem 1.5rem;
-            background: var(--success);
+            background: var(--gradient-primary);
             color: white;
-            border-radius: 10px;
-            font-size: 1.2rem;
             font-weight: 600;
-            text-align: center;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        @media (max-width: 640px) {
+        
+        tr:hover {
+            background: var(--primary-light);
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .knockout-section {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .knockout-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-success);
+        }
+        
+        .knockout-section h2 {
+            color: var(--text);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .knockout-section h2::before {
+            content: '⚡';
+            font-size: 1.5rem;
+        }
+        
+        .winner-announcement {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: var(--gradient-success);
+            color: white;
+            border-radius: 20px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.02);
+            }
+        }
+        
+        .winner-announcement::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="stars" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="white" opacity="0.3"/><circle cx="80" cy="80" r="1" fill="white" opacity="0.3"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23stars)"/></svg>');
+            opacity: 0.5;
+        }
+        
+        .winner-announcement strong {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
             body {
                 padding: 1rem;
             }
+            
+            .container {
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 2rem 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 2rem 1rem;
+            }
+            
             .groups-container {
                 grid-template-columns: 1fr;
+            }
+            
+            .group-card {
+                padding: 1.5rem;
+            }
+            
+            .match-item {
+                flex-direction: column;
+                gap: 0.75rem;
+                text-align: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tournament-info {
+                padding: 1rem;
+            }
+            
+            .winner-announcement {
+                font-size: 1.2rem;
+                padding: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>{{ tournament.name }} 🏆</h1>
-    </div>
-
-    <div class="tournament-info">
-        <p>
-            Total Teams: <strong>{{ tournament.total_teams }}</strong> • 
-            Groups: <strong>{{ tournament.total_groups }}</strong>
-        </p>
-    </div>
-
-    <a href="{% url 'home' %}" class="back-link">
-        ⬅ Back to Home
-    </a>
-
-    <!-- Group Stage -->
-    <div class="groups-container">
-        {% for group, standings in groups_data %}
-            <div class="group-card">
-                <div class="group-header">
-                    <h2>{{ group.name }}</h2>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-trophy"></i> {{ tournament.name }}</h1>
+                <div class="tournament-info">
+                    <p>
+                        <i class="fas fa-users"></i> <strong>{{ tournament.total_teams }}</strong> Teams • 
+                        <i class="fas fa-layer-group"></i> <strong>{{ tournament.total_groups }}</strong> Groups
+                    </p>
                 </div>
+            </div>
+        </div>
 
-                <h3>Standings</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Team</th>
-                            <th>Points</th>
-                            <th>GD</th>
-                            <th>GF</th>
-                            <th>GA</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in standings %}
-                        <tr>
-                            <td>{{ item.rank }}</td>
-                            <td>{{ item.team.name }}</td>
-                            <td>{{ item.points }}</td>
-                            <td>{{ item.goal_diff }}</td>
-                            <td>{{ item.goals_for }}</td>
-                            <td>{{ item.goals_against }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <div class="content">
+            <a href="{% url 'home' %}" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                Back to Home
+            </a>
 
-                <h3>Teams</h3>
-                <ul class="teams-list">
-                    {% for team in group.teams.all %}
-                        <li class="team-item">{{ team.name }}</li>
-                    {% endfor %}
-                </ul>
+            <!-- Stats Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">{{ tournament.total_teams }}</div>
+                    <div class="stat-label">Total Teams</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ tournament.total_groups }}</div>
+                    <div class="stat-label">Groups</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ groups_data|length }}</div>
+                    <div class="stat-label">Active Groups</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ knockout_matches|length }}</div>
+                    <div class="stat-label">Knockout Matches</div>
+                </div>
+            </div>
 
-                <h3>Matches</h3>
+            <!-- Group Stage -->
+            <div class="groups-container">
+                {% for group, standings in groups_data %}
+                    <div class="group-card">
+                        <div class="group-header">
+                            <h2>{{ group.name }}</h2>
+                        </div>
+
+                        <h3>Standings</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Team</th>
+                                    <th>Points</th>
+                                    <th>GD</th>
+                                    <th>GF</th>
+                                    <th>GA</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in standings %}
+                                <tr>
+                                    <td><strong>{{ item.rank }}</strong></td>
+                                    <td>{{ item.team.name }}</td>
+                                    <td><strong>{{ item.points }}</strong></td>
+                                    <td>{{ item.goal_diff }}</td>
+                                    <td>{{ item.goals_for }}</td>
+                                    <td>{{ item.goals_against }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <h3>Teams</h3>
+                        <ul class="teams-list">
+                            {% for team in group.teams.all %}
+                                <li class="team-item">{{ team.name }}</li>
+                            {% endfor %}
+                        </ul>
+
+                        <h3>Matches</h3>
+                        <ul class="matches-list">
+                            {% for match in group.matches.all %}
+                                <li class="match-item">
+                                    <span class="match-teams">
+                                        <i class="fas fa-shield-alt"></i> {{ match.team_a.name }} 
+                                        <i class="fas fa-vs"></i> {{ match.team_b.name }}
+                                    </span>
+                                    {% if match.played %}
+                                        <span class="match-score">
+                                            {{ match.score_a }} : {{ match.score_b }}
+                                        </span>
+                                    {% else %}
+                                        <span class="match-not-played">
+                                            <i class="fas fa-clock"></i> Not Played Yet
+                                        </span>
+                                    {% endif %}
+                                </li>
+                            {% empty %}
+                                <li class="match-item">
+                                    <span class="match-not-played">
+                                        <i class="fas fa-exclamation-triangle"></i> No matches generated
+                                    </span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Knockout Stage -->
+            <div class="knockout-section">
+                <h2>Knockout Stage</h2>
+
                 <ul class="matches-list">
-                    {% for match in group.matches.all %}
+                    {% for match in knockout_matches %}
                         <li class="match-item">
                             <span class="match-teams">
+                                <i class="fas fa-fire"></i> <strong>{{ match.get_stage_display }}:</strong> 
                                 {{ match.team_a.name }} vs {{ match.team_b.name }}
                             </span>
                             {% if match.played %}
@@ -244,55 +632,26 @@
                                 </span>
                             {% else %}
                                 <span class="match-not-played">
-                                    Not Played Yet
+                                    <i class="fas fa-clock"></i> Not Played Yet
                                 </span>
                             {% endif %}
                         </li>
                     {% empty %}
                         <li class="match-item">
-                            <span class="match-not-played">No matches generated</span>
+                            <span class="match-not-played">
+                                <i class="fas fa-info-circle"></i> Knockout matches not yet generated.
+                            </span>
                         </li>
                     {% endfor %}
                 </ul>
             </div>
-        {% endfor %}
-    </div>
 
-    <!-- Knockout Stage -->
-    <div class="group-card">
-        <div class="group-header">
-            <h2>Knockout Stage</h2>
+            {% if winner %}
+                <div class="winner-announcement">
+                    <i class="fas fa-crown"></i> <strong>{{ winner.name }}</strong> is the Tournament Winner! 🏆
+                </div>
+            {% endif %}
         </div>
-
-        <ul class="matches-list">
-            {% for match in knockout_matches %}
-                <li class="match-item">
-                    <span class="match-teams">
-                        <strong>{{ match.get_stage_display }}:</strong> 
-                        {{ match.team_a.name }} vs {{ match.team_b.name }}
-                    </span>
-                    {% if match.played %}
-                        <span class="match-score">
-                            {{ match.score_a }} : {{ match.score_b }}
-                        </span>
-                    {% else %}
-                        <span class="match-not-played">
-                            Not Played Yet
-                        </span>
-                    {% endif %}
-                </li>
-            {% empty %}
-                <li class="match-item">
-                    <span class="match-not-played">Knockout matches not yet generated.</span>
-                </li>
-            {% endfor %}
-        </ul>
     </div>
-
-    {% if winner %}
-        <div class="winner-announcement">
-            🥇 <strong>{{ winner.name }}</strong> is the Tournament Winner!
-        </div>
-    {% endif %}
 </body>
 </html>
