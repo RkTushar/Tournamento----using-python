@@ -4,16 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Setup Tournament | {{ tournament.name }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #dbeafe;
             --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
             --background: #f8fafc;
             --surface: #ffffff;
             --text: #1e293b;
+            --text-light: #64748b;
             --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
 
         * {
@@ -24,179 +35,445 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--background);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: var(--text);
             line-height: 1.6;
-            padding: 2rem;
-            max-width: 800px;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 900px;
             margin: 0 auto;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            border-radius: 2px;
         }
 
         h1 {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-            font-weight: 700;
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            font-weight: 400;
         }
 
         .tournament-info {
             background: var(--surface);
-            padding: 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            text-align: center;
-        }
-
-        .tournament-info p {
-            color: var(--secondary);
-            font-size: 1.1rem;
-        }
-
-        .tournament-info strong {
-            color: var(--text);
-            font-weight: 600;
-        }
-
-        form {
-            background: var(--surface);
             padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            margin-bottom: 2rem;
-        }
-
-        h3 {
-            color: var(--text);
-            font-size: 1.25rem;
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-        }
-
-        .team-list {
-            display: grid;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .team-input {
+            border-radius: 20px;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow-xl);
+            text-align: center;
             position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .team-input input {
-            width: 100%;
-            padding: 0.75rem;
-            padding-left: 2.5rem;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-        }
-
-        .team-input input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .team-number {
+        .tournament-info::before {
+            content: '';
             position: absolute;
-            left: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--secondary);
-            font-weight: 500;
-            font-size: 0.9rem;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--success), var(--warning));
         }
 
-        button {
-            background-color: var(--primary);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            width: 100%;
+        .tournament-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
         }
 
-        button:hover {
-            background-color: var(--primary-dark);
+        .tournament-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        form {
+            background: var(--surface);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-xl);
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+        }
+
+        h3 {
+            color: var(--text);
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .team-list {
+            display: grid;
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .team-input {
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+
+        .team-input:hover {
+            transform: translateX(5px);
+        }
+
+        .team-input input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: var(--background);
+        }
+
+        .team-input input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            background: white;
+            transform: scale(1.02);
+        }
+
+        .team-input input::placeholder {
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .team-number {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1rem;
+            background: var(--primary-light);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
         }
 
         .back-link {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            color: var(--primary);
+            gap: 0.75rem;
+            color: white;
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.2s ease;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .back-link:hover {
-            color: var(--primary-dark);
+            color: white;
             text-decoration: none;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-5px);
         }
 
-        @media (max-width: 640px) {
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-step {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active {
+            background: var(--primary);
+            transform: scale(1.2);
+        }
+
+        .progress-step.completed {
+            background: var(--success);
+        }
+
+        @media (max-width: 768px) {
             body {
                 padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
             }
             
             form {
                 padding: 1.5rem;
             }
+            
+            .tournament-info {
+                padding: 1.5rem;
+            }
+            
+            .tournament-stats {
+                gap: 1rem;
+            }
+            
+            .stat-value {
+                font-size: 1.25rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tournament-stats {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .team-input input {
+                padding: 0.875rem 0.875rem 0.875rem 2.5rem;
+            }
+            
+            .team-number {
+                left: 0.75rem;
+                width: 20px;
+                height: 20px;
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>⚙️ Setup Tournament</h1>
-    </div>
-
-    <div class="tournament-info">
-        <p>
-            <strong>{{ tournament.name }}</strong><br>
-            Total Teams: <strong>{{ tournament.total_teams }}</strong> • 
-            Groups: <strong>{{ tournament.total_groups }}</strong>
-        </p>
-    </div>
-
-    <form method="POST">
-        {% csrf_token %}
-        <h3>Enter Team Names</h3>
-        <div class="team-list">
-            {% for i in team_count %}
-                <div class="team-input">
-                    <span class="team-number">{{ forloop.counter }}.</span>
-                    <input type="text" 
-                           name="team_names" 
-                           placeholder="Enter team name" 
-                           required
-                           autocomplete="off">
-                </div>
-            {% endfor %}
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-cog fa-spin"></i> Setup Tournament</h1>
+            <p class="subtitle">Configure your tournament teams and generate groups</p>
         </div>
-        <button type="submit">
-            <span>✅</span>
-            Finalize & Generate Groups
-        </button>
-    </form>
 
-    <a href="{% url 'home' %}" class="back-link">
-        <span>⬅</span>
-        Back to Home
-    </a>
+        <div class="tournament-info">
+            <div class="tournament-name">
+                <i class="fas fa-trophy"></i>
+                {{ tournament.name }}
+            </div>
+            <div class="tournament-stats">
+                <div class="stat-item">
+                    <div class="stat-value">{{ tournament.total_teams }}</div>
+                    <div class="stat-label">Teams</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ tournament.total_groups }}</div>
+                    <div class="stat-label">Groups</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ tournament.total_teams|add:"-1" }}</div>
+                    <div class="stat-label">Matches</div>
+                </div>
+            </div>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            <h3>
+                <i class="fas fa-users"></i>
+                Enter Team Names
+            </h3>
+            
+            <div class="progress-indicator">
+                <div class="progress-step active"></div>
+                <div class="progress-step"></div>
+                <div class="progress-step"></div>
+            </div>
+            
+            <div class="team-list">
+                {% for i in team_count %}
+                    <div class="team-input">
+                        <span class="team-number">{{ forloop.counter }}</span>
+                        <input type="text" 
+                               name="team_names" 
+                               placeholder="Enter team name (e.g., Team Alpha)" 
+                               required
+                               autocomplete="off">
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-check-circle"></i>
+                Finalize & Generate Groups
+            </button>
+        </form>
+
+        <a href="{% url 'home' %}" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Back to Home
+        </a>
+    </div>
+
+    <script>
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input[type="text"]');
+            const progressSteps = document.querySelectorAll('.progress-step');
+            
+            // Animate inputs on focus
+            inputs.forEach((input, index) => {
+                input.addEventListener('focus', function() {
+                    // Update progress indicator
+                    progressSteps.forEach((step, stepIndex) => {
+                        if (stepIndex <= Math.floor(index / Math.ceil(inputs.length / 3))) {
+                            step.classList.add('active');
+                            if (stepIndex < Math.floor(index / Math.ceil(inputs.length / 3))) {
+                                step.classList.add('completed');
+                            }
+                        } else {
+                            step.classList.remove('active', 'completed');
+                        }
+                    });
+                });
+            });
+            
+            // Form submission animation
+            const form = document.querySelector('form');
+            const submitBtn = document.querySelector('.submit-btn');
+            
+            form.addEventListener('submit', function() {
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                submitBtn.disabled = true;
+            });
+        });
+    </script>
 </body>
 </html>
