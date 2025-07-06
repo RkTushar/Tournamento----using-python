@@ -19,13 +19,7 @@
 
 ---
 
-## 📸 Screenshots
 
-| Home Page | Tournament Detail |
-|----------|------------------|
-| ![Home Screenshot](screenshot-home.png) | ![Detail Screenshot](screenshot-detail.png) |
-
----
 
 ## 🛠️ Tech Stack
 
